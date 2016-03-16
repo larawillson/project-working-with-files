@@ -4,6 +4,10 @@
 
 import random, os
 
+#Creates directory for quizzes and answers
+os.makedirs("./answers", exist_ok=True)
+os.makedirs("./quizzes", exist_ok=True)
+
 # The quiz data. Keys are states and values are their capitals.
 capitals = {'Alabama': 'Montgomery', 'Alaska': 'Juneau', 'Arizona': 'Phoenix',
             'Arkansas': 'Little Rock', 'California': 'Sacramento', 'Colorado': 'Denver',
@@ -22,12 +26,44 @@ capitals = {'Alabama': 'Montgomery', 'Alaska': 'Juneau', 'Arizona': 'Phoenix',
             'Nashville', 'Texas': 'Austin', 'Utah': 'Salt Lake City', 'Vermont':
             'Montpelier', 'Virginia': 'Richmond', 'Washington': 'Olympia', 'West Virginia': 
             'Charleston', 'Wisconsin': 'Madison', 'Wyoming': 'Cheyenne'}
+# Create the quiz and answer key files.
+for quizNum in range(5):
+    quizFile = open('./quizzes/capitalsquiz%s.txt' % (quizNum + 1), 'w')
+    answerKeyFile = open('./answers/capitalsquiz_answers%s.txt' % (quizNum + 1), 'w')
 
+# Write out the header for the quiz.
+    quizFile.write('Name:\n\nDate:\n\nPeriod:\n\n')
+    quizFile.write((' ' * 20) + 'State Capitals Quiz (Form %s)' % (quizNum + 1))
+    quizFile.write('\n\n')
+
+# Shuffle the order of the states.
+    states = list(capitals.keys())
+    random.shuffle(states)
+
+# Loop through all 50 states, making a question for each.
+for questionNum in range(50):
+    correctAnswer = capitals[states[questionNum]]
+    wrongAnswers = list(capitals.values())
+    del wrongAnswers[wrongAnswers.index(correctAnswer)]
+    wrongAnswers = random.sample(wrongAnswers, 3)
+    answerOptions = wrongAnswers + [correctAnswer]
+    random.shuffle(answerOptions)
+
+# Write the question and the answer options to the quiz file.
+quizFile.write('%s. What is the capital of %s?\n' % (questionNum + 1,states[questionNum]))
+
+for i in range(4):
+    quizFile.write(' %s. %s\n' % ('ABCD'[i], answerOptions[i]))
+    quizFile.write('\n')
+
+# Write the answer key to a file.
+    answerKeyFile.write('%s. %s\n' % (questionNum + 1, 'ABCD'[answerOptions.index(correctAnswer)]))
+quizFile.close()
+answerKeyFile.close()
+    
             #TODO: follow the 'generating random quiz files' project in the textbook to fill in this file.
             #TODO: however, make the following modificatiosn to the instructions on the textbook:
             #       1. instead of making 35 quiz versions, you'll only make 5 quiz versions
             #       2. instead of creating quiz and answer files in the current working directory, create a folder titled 'quizzes' and another folder titled 'answers'.
             #       3. place the randomly-generated quizzes in the 'quizzes' directory.
             #       4. plaec the corresponding answers in the 'answers' directory.
-            
-            
